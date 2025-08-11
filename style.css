@@ -362,7 +362,9 @@ body {
 
 
 .clear-data-link {
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-top: 20px;
 }
 
@@ -378,29 +380,19 @@ body {
     color: #aaaaaa;
 }
 
+/* Version display */
+.version-display {
+    color: #666666;
+    font-size: 10px;
+    font-family: monospace;
+    user-select: none;
+    pointer-events: none;
+}
+
 /* Empty state */
 .empty-state {
     text-align: center;
     color: #666666;
     font-style: italic;
     padding: 20px;
-}
-
-/* Version display */
-.version-display {
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
-    background: rgba(255, 255, 255, 0.1);
-    color: #cccccc;
-    padding: 6px 10px;
-    border-radius: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    font-size: 12px;
-    font-family: monospace;
-    z-index: 1000;
-    pointer-events: none;
-    user-select: none;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
 }
