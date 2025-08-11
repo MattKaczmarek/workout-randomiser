@@ -275,17 +275,19 @@ function shuffleArray(array) {
 
 function generateWorkout() {
     const shuffledMain = shuffleArray(mainMuscles);
+    const shuffledAdditional = shuffleArray(additionalMuscles);
     const exercises = [];
     
     // Dla każdego mięśnia głównego
     shuffledMain.forEach((mainMuscle, index) => {
         let exerciseName = mainMuscle;
         let exerciseId = `main_${index}`;
+        let additionalMuscle = null;
         
-        // Losowo paruj z mięśniem dodatkowym (50% szansy jeśli są dostępne)
-        if (additionalMuscles.length > 0 && Math.random() > 0.5) {
-            const randomAdditional = additionalMuscles[Math.floor(Math.random() * additionalMuscles.length)];
-            exerciseName = `${mainMuscle} + ${randomAdditional}`;
+        // Jeśli są dostępne mięśnie dodatkowe, sparuj z losowym
+        if (shuffledAdditional.length > 0) {
+            additionalMuscle = shuffledAdditional[index % shuffledAdditional.length];
+            exerciseName = `${mainMuscle} + ${additionalMuscle}`;
             exerciseId = `combo_${index}`;
         }
         
@@ -293,7 +295,7 @@ function generateWorkout() {
             id: exerciseId,
             name: exerciseName,
             mainMuscle: mainMuscle,
-            additionalMuscle: exerciseName.includes(' + ') ? exerciseName.split(' + ')[1] : null
+            additionalMuscle: additionalMuscle
         });
     });
     
