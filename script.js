@@ -426,36 +426,27 @@ function renderWorkoutExercises() {
         return;
     }
     
-    // Posortuj ćwiczenia: nieodhaczone na górze, odhaczone na dole
-    const sortedExercises = [...workoutExercises].sort((a, b) => {
-        const aChecked = exerciseStates[a.id] || false;
-        const bChecked = exerciseStates[b.id] || false;
-        
-        // Nieodhaczone (false) na górze, odhaczone (true) na dole
-        if (aChecked === bChecked) return 0;
-        return aChecked ? 1 : -1;
-    });
+    // Ćwiczenie "na dzisiaj" to zawsze pierwsze z oryginalnej listy (nie sortujemy!)
+    const todayExerciseData = workoutExercises.length > 0 ? workoutExercises[0] : null;
     
-    // Pierwsze nieodhaczone ćwiczenie - "na dzisiaj"
-    const firstUncheckedExercise = sortedExercises.find(exercise => !exerciseStates[exercise.id]);
-    
-    if (firstUncheckedExercise) {
+    if (todayExerciseData) {
+        const isChecked = exerciseStates[todayExerciseData.id] || false;
         const exerciseItem = document.createElement('div');
-        exerciseItem.className = 'muscle-item';
-        exerciseItem.onclick = () => toggleExercise(firstUncheckedExercise.id);
+        exerciseItem.className = `muscle-item ${isChecked ? 'checked' : ''}`;
+        exerciseItem.onclick = () => toggleExercise(todayExerciseData.id);
         
         exerciseItem.innerHTML = `
-            <div class="checkbox"></div>
+            <div class="checkbox">${isChecked ? '✓' : ''}</div>
             <div>
-                <div class="muscle-text">${firstUncheckedExercise.name}</div>
+                <div class="muscle-text">${todayExerciseData.name}</div>
             </div>
         `;
         
         todayExercise.appendChild(exerciseItem);
     }
     
-    // Pozostałe ćwiczenia
-    const remainingExercises = sortedExercises.filter(exercise => exercise.id !== firstUncheckedExercise?.id);
+    // Pozostałe ćwiczenia (wszystkie poza pierwszym)
+    const remainingExercises = workoutExercises.slice(1);
     
     if (remainingExercises.length > 0) {
         remainingExercises.forEach((exercise) => {
