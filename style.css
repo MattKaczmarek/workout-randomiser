@@ -409,3 +409,15 @@ body {
     font-style: italic;
     padding: 20px;
 }
+
+/* Completed state */
+.completed-state {
+    text-align: center;
+    color: #00aa00;
+    font-weight: 600;
+    font-size: 18px;
+    padding: 30px 20px;
+    background: linear-gradient(135deg, rgba(0, 170, 0, 0.1), rgba(0, 170, 0, 0.05));
+    border: 1px solid rgba(0, 170, 0, 0.3);
+    border-radius: 12px;
+}

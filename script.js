@@ -182,12 +182,39 @@ function editMuscle(type, index) {
                         }
                         return exercise;
                     });
+                    
+                    // Aktualizuj również originalOrder
+                    originalOrder = originalOrder.map(exercise => {
+                        if (exercise.mainMuscle === oldName) {
+                            const updatedName = exercise.additionalMuscle 
+                                ? `${newName} + ${exercise.additionalMuscle}`
+                                : newName;
+                            return {
+                                ...exercise,
+                                mainMuscle: newName,
+                                name: updatedName
+                            };
+                        }
+                        return exercise;
+                    });
                 } else {
                     const oldName = additionalMuscles[index];
                     additionalMuscles[index] = newName;
                     
                     // Aktualizuj w aktualnym treningu
                     workoutExercises = workoutExercises.map(exercise => {
+                        if (exercise.additionalMuscle === oldName) {
+                            return {
+                                ...exercise,
+                                additionalMuscle: newName,
+                                name: `${exercise.mainMuscle} + ${newName}`
+                            };
+                        }
+                        return exercise;
+                    });
+                    
+                    // Aktualizuj również originalOrder
+                    originalOrder = originalOrder.map(exercise => {
                         if (exercise.additionalMuscle === oldName) {
                             return {
                                 ...exercise,
@@ -406,6 +433,15 @@ function renderWorkoutExercises() {
         return;
     }
     
+    // Sprawdź czy wszystkie ćwiczenia są zaznaczone
+    const allChecked = workoutExercises.every(exercise => exerciseStates[exercise.id]);
+    if (allChecked) {
+        todayExercise.innerHTML = '<div class="completed-state">Ćwiczenia zakończone</div>';
+        showMoreButton.style.display = 'none';
+        showLessButton.style.display = 'none';
+        return;
+    }
+    
     // Pobierz posortowane ćwiczenia (niezaznaczone na dole)
     const sortedExercises = getSortedExercises();
     
@@ -551,36 +587,32 @@ function handleKeyPress(event, inputType) {
 
 // Rejestracja Service Worker z obsługą aktualizacji
 if ('serviceWorker' in navigator) {
-    // Wymuś aktualizację przy każdym ładowaniu strony
-    navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        registrations.forEach(function(registration) {
-            registration.update();
-        });
-    });
-    
     window.addEventListener('load', function() {
         navigator.serviceWorker.register('./sw.js')
             .then(function(registration) {
                 console.log('Service Worker zarejestrowany:', registration.scope);
                 
-                // Agresywne wymuszenie sprawdzenia aktualizacji
+                // Sprawdź aktualizację przy załadowaniu
+                registration.update();
+                
+                // Sprawdź aktualizację co 30 sekund (mniej agresywnie)
                 setInterval(() => {
                     registration.update();
-                }, 5000); // Sprawdzaj co 5 sekund
-                
-                // Natychmiastowe sprawdzenie aktualizacji
-                registration.update();
+                }, 30000);
                 
                 // Sprawdź czy jest nowa wersja
                 registration.addEventListener('updatefound', () => {
                     const newWorker = registration.installing;
+                    console.log('Wykryto nową wersję, ładowanie...');
+                    
                     newWorker.addEventListener('statechange', () => {
                         if (newWorker.state === 'installed') {
                             if (navigator.serviceWorker.controller) {
-                                // Nowa wersja dostępna - automatycznie zaaktualizuj
-                                console.log('Nowa wersja dostępna, aktualizuję automatycznie...');
-                                newWorker.postMessage({action: 'skipWaiting'});
-                                window.location.reload();
+                                console.log('Nowa wersja gotowa do użycia');
+                                // Pokaż powiadomienie zamiast natychmiastowego reload
+                                showUpdateNotification();
+                            } else {
+                                console.log('Aplikacja zainstalowana po raz pierwszy');
                             }
                         }
                     });
@@ -592,10 +624,20 @@ if ('serviceWorker' in navigator) {
             
         // Nasłuchuj wiadomości od Service Worker
         navigator.serviceWorker.addEventListener('controllerchange', () => {
-            // Service Worker został zaktualizowany
-            console.log('Service Worker zaktualizowany, przeładowuję stronę...');
+            console.log('Service Worker przejął kontrolę, odświeżanie...');
             window.location.reload();
         });
+    });
+    
+    // Sprawdź aktualizacje przy powrocie do karty
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+            navigator.serviceWorker.getRegistrations().then(registrations => {
+                registrations.forEach(registration => {
+                    registration.update();
+                });
+            });
+        }
     });
 }
 
