@@ -391,13 +391,16 @@ body {
     position: fixed;
     bottom: 10px;
     right: 10px;
-    background: rgba(0, 0, 0, 0.7);
-    color: #888888;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 11px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #cccccc;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 12px;
     font-family: monospace;
     z-index: 1000;
     pointer-events: none;
     user-select: none;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
