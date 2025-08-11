@@ -64,37 +64,7 @@ function addMainMuscle() {
         input.value = '';
         renderMainMusclesList();
         updateStartButton();
-        
-        // Jeśli mamy aktywny trening, dodaj nowy mięsień do niego (ale nie na dzisiaj)
-        if (workoutExercises.length > 0) {
-            // Znajdź losowe miejsce w treningu (ale nie pierwsze - to "na dzisiaj")
-            const availablePositions = [];
-            for (let i = 1; i < workoutExercises.length; i++) {
-                availablePositions.push(i);
-            }
-            
-            // Jeśli nie ma dostępnych pozycji, dodaj na koniec
-            const insertPosition = availablePositions.length > 0 
-                ? availablePositions[Math.floor(Math.random() * availablePositions.length)]
-                : workoutExercises.length;
-            
-            const newExercise = {
-                id: `main_${Date.now()}`,
-                name: muscleName,
-                mainMuscle: muscleName,
-                additionalMuscle: null
-            };
-            
-            workoutExercises.splice(insertPosition, 0, newExercise);
-            exerciseStates[newExercise.id] = false;
-            
-            // Odśwież ekran treningu jeśli jest aktywny
-            if (document.getElementById('workoutScreen').style.display !== 'none') {
-                renderWorkoutExercises();
-            }
-        }
-        
-        saveData();
+        saveData(); // Zapisz bez wpływu na obecny trening
     }
 }
 
@@ -106,36 +76,7 @@ function addAdditionalMuscle() {
         additionalMuscles.push(muscleName);
         input.value = '';
         renderAdditionalMusclesList();
-        
-        // Jeśli mamy aktywny trening, spróbuj dodać nowy mięsień dodatkowy
-        if (workoutExercises.length > 0) {
-            // Znajdź ćwiczenia które nie mają mięśnia dodatkowego (ale nie pierwsze - to "na dzisiaj")
-            const availableExercises = [];
-            for (let i = 1; i < workoutExercises.length; i++) {
-                if (!workoutExercises[i].additionalMuscle) {
-                    availableExercises.push(i);
-                }
-            }
-            
-            // Jeśli są dostępne ćwiczenia, wybierz losowe i dodaj mięsień dodatkowy
-            if (availableExercises.length > 0) {
-                const randomIndex = availableExercises[Math.floor(Math.random() * availableExercises.length)];
-                const exercise = workoutExercises[randomIndex];
-                
-                workoutExercises[randomIndex] = {
-                    ...exercise,
-                    additionalMuscle: muscleName,
-                    name: `${exercise.mainMuscle} + ${muscleName}`
-                };
-                
-                // Odśwież ekran treningu jeśli jest aktywny
-                if (document.getElementById('workoutScreen').style.display !== 'none') {
-                    renderWorkoutExercises();
-                }
-            }
-        }
-        
-        saveData();
+        saveData(); // Zapisz bez wpływu na obecny trening
     }
 }
 
