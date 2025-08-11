@@ -270,14 +270,6 @@ function updateStartButton() {
     button.disabled = mainMuscles.length === 0;
 }
 
-function loadDefaultWorkout() {
-    mainMuscles = ['Nogi', 'Klatka', 'Plecy', 'Ramiona', 'Biceps', 'Triceps'];
-    additionalMuscles = ['Brzuch', 'Łydki'];
-    
-    renderMainMusclesList();
-    renderAdditionalMusclesList();
-    updateStartButton();
-}
 
 // Funkcje generowania treningu
 function shuffleArray(array) {
