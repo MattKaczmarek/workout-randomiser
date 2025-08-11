@@ -300,9 +300,9 @@ function generateWorkout() {
         let exerciseId = `main_${index}`;
         let additionalMuscle = null;
         
-        // Jeśli są dostępne mięśnie dodatkowe, sparuj z losowym
-        if (shuffledAdditional.length > 0) {
-            additionalMuscle = shuffledAdditional[index % shuffledAdditional.length];
+        // Jeśli są dostępne mięśnie dodatkowe i ten index mieści się w zakresie
+        if (shuffledAdditional.length > 0 && index < shuffledAdditional.length) {
+            additionalMuscle = shuffledAdditional[index];
             exerciseName = `${mainMuscle} + ${additionalMuscle}`;
             exerciseId = `combo_${index}`;
         }
@@ -565,16 +565,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Zawsze otwórz ekran treningu
     // Jeśli nie ma skonfigurowanych mięśni, pokaż pusty ekran z przyciskiem edycji
-    if (mainMuscles.length === 0) {
-        // Ustaw domyślne mięśnie dla nowych użytkowników
-        loadDefaultWorkout();
-        workoutExercises = generateWorkout();
-        exerciseStates = {};
-        workoutExercises.forEach(exercise => {
-            exerciseStates[exercise.id] = false;
-        });
-        saveData();
-    }
     
     // Jeśli nie ma wygenerowanego treningu, wygeneruj go
     if (workoutExercises.length === 0 && mainMuscles.length > 0) {
