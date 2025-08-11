@@ -507,6 +507,9 @@ if ('serviceWorker' in navigator) {
             .then(function(registration) {
                 console.log('Service Worker zarejestrowany:', registration.scope);
                 
+                // Wymusza sprawdzenie aktualizacji przy każdym uruchomieniu
+                registration.update();
+                
                 // Sprawdź czy jest nowa wersja
                 registration.addEventListener('updatefound', () => {
                     const newWorker = registration.installing;
