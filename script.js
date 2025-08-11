@@ -68,6 +68,7 @@ function renderExercises() {
     const todayExercise = document.getElementById('todayExercise');
     const moreExercises = document.getElementById('moreExercises');
     const showMoreButton = document.getElementById('showMoreButton');
+    const showLessButton = document.getElementById('showLessButton');
     
     // Wyczyść
     todayExercise.innerHTML = '';
@@ -107,10 +108,19 @@ function renderExercises() {
                 moreExercises.appendChild(muscleItem);
             });
             
-            showMoreButton.style.display = 'block';
-            showMoreButton.textContent = showMore ? 'Pokaż mniej' : 'Pokaż więcej';
+            // Pokaż właściwe przyciski
+            if (showMore) {
+                showMoreButton.style.display = 'none';
+                showLessButton.style.display = 'block';
+                moreExercises.classList.add('show');
+            } else {
+                showMoreButton.style.display = 'block';
+                showLessButton.style.display = 'none';
+                moreExercises.classList.remove('show');
+            }
         } else {
             showMoreButton.style.display = 'none';
+            showLessButton.style.display = 'none';
         }
     }
     
@@ -119,16 +129,7 @@ function renderExercises() {
 
 function toggleMoreExercises() {
     showMore = !showMore;
-    const moreExercises = document.getElementById('moreExercises');
-    const showMoreButton = document.getElementById('showMoreButton');
-    
-    if (showMore) {
-        moreExercises.classList.add('show');
-        showMoreButton.textContent = 'Pokaż mniej';
-    } else {
-        moreExercises.classList.remove('show');
-        showMoreButton.textContent = 'Pokaż więcej';
-    }
+    renderExercises(); // Po prostu przerenderwij wszystko
 }
 
 function toggleMuscle(muscle) {
