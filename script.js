@@ -11,16 +11,13 @@ const MUSCLES = [
 
 let muscleStates = {};
 let muscleOrder = [...MUSCLES];
-let totalWorkouts = 0;
-let lastWorkoutDate = null;
+let showMore = false;
 
 // Funkcje localStorage
 function saveData() {
     const data = {
         muscleStates: muscleStates,
-        muscleOrder: muscleOrder,
-        totalWorkouts: totalWorkouts,
-        lastWorkoutDate: lastWorkoutDate
+        muscleOrder: muscleOrder
     };
     localStorage.setItem('workoutRandomiser', JSON.stringify(data));
 }
@@ -31,8 +28,6 @@ function loadData() {
         const data = JSON.parse(saved);
         muscleStates = data.muscleStates || {};
         muscleOrder = data.muscleOrder || [...MUSCLES];
-        totalWorkouts = data.totalWorkouts || 0;
-        lastWorkoutDate = data.lastWorkoutDate || null;
     }
     
     // Upewnij się, że wszystkie mięśnie mają stan
@@ -49,15 +44,13 @@ function clearAllData() {
         // Reset do wartości domyślnych
         muscleStates = {};
         muscleOrder = [...MUSCLES];
-        totalWorkouts = 0;
-        lastWorkoutDate = null;
         
         MUSCLES.forEach(muscle => {
             muscleStates[muscle] = false;
         });
         
-        renderMuscles();
-        updateStats();
+        showMore = false;
+        renderExercises();
     }
 }
 
@@ -71,25 +64,71 @@ function shuffleArray(array) {
     return newArray;
 }
 
-function renderMuscles() {
-    const muscleList = document.getElementById('muscleList');
-    muscleList.innerHTML = '';
+function renderExercises() {
+    const todayExercise = document.getElementById('todayExercise');
+    const moreExercises = document.getElementById('moreExercises');
+    const showMoreButton = document.getElementById('showMoreButton');
     
-    muscleOrder.forEach((muscle, index) => {
-        const isChecked = muscleStates[muscle];
+    // Wyczyść
+    todayExercise.innerHTML = '';
+    moreExercises.innerHTML = '';
+    
+    if (muscleOrder.length > 0) {
+        // Pierwsze ćwiczenie - "na dzisiaj"
+        const firstMuscle = muscleOrder[0];
+        const isChecked = muscleStates[firstMuscle];
+        
         const muscleItem = document.createElement('div');
         muscleItem.className = `muscle-item ${isChecked ? 'checked' : ''}`;
-        muscleItem.onclick = () => toggleMuscle(muscle);
+        muscleItem.onclick = () => toggleMuscle(firstMuscle);
         
         muscleItem.innerHTML = `
             <div class="checkbox">${isChecked ? '✓' : ''}</div>
-            <div class="muscle-text">${index + 1}. ${muscle}</div>
+            <div class="muscle-text">${firstMuscle}</div>
         `;
         
-        muscleList.appendChild(muscleItem);
-    });
+        todayExercise.appendChild(muscleItem);
+        
+        // Pozostałe ćwiczenia
+        if (muscleOrder.length > 1) {
+            const remainingMuscles = muscleOrder.slice(1);
+            
+            remainingMuscles.forEach((muscle) => {
+                const isChecked = muscleStates[muscle];
+                const muscleItem = document.createElement('div');
+                muscleItem.className = `muscle-item ${isChecked ? 'checked' : ''}`;
+                muscleItem.onclick = () => toggleMuscle(muscle);
+                
+                muscleItem.innerHTML = `
+                    <div class="checkbox">${isChecked ? '✓' : ''}</div>
+                    <div class="muscle-text">${muscle}</div>
+                `;
+                
+                moreExercises.appendChild(muscleItem);
+            });
+            
+            showMoreButton.style.display = 'block';
+            showMoreButton.textContent = showMore ? 'Pokaż mniej' : 'Pokaż więcej';
+        } else {
+            showMoreButton.style.display = 'none';
+        }
+    }
     
     saveData();
+}
+
+function toggleMoreExercises() {
+    showMore = !showMore;
+    const moreExercises = document.getElementById('moreExercises');
+    const showMoreButton = document.getElementById('showMoreButton');
+    
+    if (showMore) {
+        moreExercises.classList.add('show');
+        showMoreButton.textContent = 'Pokaż mniej';
+    } else {
+        moreExercises.classList.remove('show');
+        showMoreButton.textContent = 'Pokaż więcej';
+    }
 }
 
 function toggleMuscle(muscle) {
@@ -99,10 +138,6 @@ function toggleMuscle(muscle) {
     const allChecked = Object.values(muscleStates).every(checked => checked);
     
     if (allChecked) {
-        // Zwiększ liczbę treningów
-        totalWorkouts++;
-        lastWorkoutDate = new Date().toLocaleDateString('pl-PL');
-        
         // Pokaż komunikat
         const notice = document.getElementById('resetNotice');
         notice.classList.add('show');
@@ -113,13 +148,12 @@ function toggleMuscle(muscle) {
                 muscleStates[m] = false;
             });
             notice.classList.remove('show');
-            renderMuscles();
-            updateStats();
+            showMore = false;
+            renderExercises();
         }, 2000);
     }
     
-    renderMuscles();
-    updateStats();
+    renderExercises();
 }
 
 function randomizeOrder() {
@@ -128,25 +162,8 @@ function randomizeOrder() {
     MUSCLES.forEach(muscle => {
         muscleStates[muscle] = false;
     });
-    renderMuscles();
-    updateStats();
-}
-
-function updateStats() {
-    const statsElement = document.getElementById('stats');
-    const completedCount = Object.values(muscleStates).filter(state => state).length;
-    const totalCount = MUSCLES.length;
-    
-    statsElement.innerHTML = `
-        <h3>📊 Statystyki</h3>
-        <div class="stats-info">
-            Wykonane dziś: ${completedCount}/${totalCount}<br>
-            Ukończone treningi: ${totalWorkouts}<br>
-            ${lastWorkoutDate ? `Ostatni trening: ${lastWorkoutDate}` : 'Brak ukończonych treningów'}
-        </div>
-    `;
-    
-    saveData();
+    showMore = false;
+    renderExercises();
 }
 
 // Rejestracja Service Worker z obsługą aktualizacji
@@ -189,7 +206,7 @@ function showUpdateNotification() {
         top: 0;
         left: 0;
         right: 0;
-        background: #28a745;
+        background: #000000;
         color: white;
         padding: 15px;
         text-align: center;
@@ -217,6 +234,5 @@ if (window.location.search.includes('action=shuffle')) {
 // Inicjalizacja po załadowaniu strony
 document.addEventListener('DOMContentLoaded', function() {
     loadData();
-    renderMuscles();
-    updateStats();
+    renderExercises();
 });

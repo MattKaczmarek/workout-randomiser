@@ -6,7 +6,7 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #ffffff;
     min-height: 100vh;
     padding: 20px;
 }
@@ -15,13 +15,13 @@ body {
     max-width: 400px;
     margin: 0 auto;
     background: white;
-    border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
     overflow: hidden;
 }
 
 .header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #000000;
     color: white;
     text-align: center;
     padding: 30px 20px;
@@ -36,47 +36,61 @@ body {
     padding: 20px;
 }
 
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #000000;
+    margin-bottom: 15px;
+}
+
+.today-exercise {
+    background: #f8f8f8;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
 .muscle-item {
     display: flex;
     align-items: center;
-    background: #f8f9fa;
-    border: 2px solid #e9ecef;
-    border-radius: 12px;
+    background: #f8f8f8;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
     padding: 15px;
     margin-bottom: 10px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     user-select: none;
 }
 
 .muscle-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    background: #f0f0f0;
 }
 
 .muscle-item.checked {
-    background: #d4edda;
-    border-color: #28a745;
-    color: #155724;
+    background: #000000;
+    border-color: #000000;
+    color: white;
 }
 
 .checkbox {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    border: 2px solid #dee2e6;
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+    border: 2px solid #ccc;
     margin-right: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: bold;
 }
 
 .muscle-item.checked .checkbox {
-    background: #28a745;
-    border-color: #28a745;
-    color: white;
+    background: white;
+    border-color: white;
+    color: black;
 }
 
 .muscle-text {
@@ -86,75 +100,77 @@ body {
 
 .shuffle-button {
     width: 100%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #000000;
     color: white;
     border: none;
-    border-radius: 12px;
+    border-radius: 8px;
     padding: 15px;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    margin-top: 20px;
-    transition: transform 0.2s ease;
+    margin-bottom: 15px;
+    transition: background-color 0.2s ease;
 }
 
 .shuffle-button:hover {
-    transform: scale(1.02);
+    background: #333333;
 }
 
-.shuffle-button:active {
-    transform: scale(0.98);
+.show-more-button {
+    width: 100%;
+    background: white;
+    color: #000000;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background-color 0.2s ease;
+}
+
+.show-more-button:hover {
+    background: #f8f8f8;
+}
+
+.more-exercises {
+    display: none;
+}
+
+.more-exercises.show {
+    display: block;
 }
 
 .reset-notice {
-    background: #d1ecf1;
-    color: #0c5460;
+    background: #f0f0f0;
+    color: #333333;
     padding: 15px;
-    border-radius: 12px;
+    border-radius: 8px;
     margin-bottom: 20px;
     text-align: center;
     font-weight: 500;
     opacity: 0;
     transition: opacity 0.3s ease;
+    border: 1px solid #e0e0e0;
 }
 
 .reset-notice.show {
     opacity: 1;
 }
 
-.stats {
-    background: #f8f9fa;
-    border-radius: 12px;
-    padding: 15px;
-    margin-bottom: 20px;
+.clear-data-link {
     text-align: center;
+    margin-top: 20px;
 }
 
-.stats h3 {
-    color: #495057;
-    margin-bottom: 10px;
-    font-size: 16px;
-}
-
-.stats-info {
-    color: #6c757d;
-    font-size: 14px;
-}
-
-.clear-data-button {
-    width: 100%;
-    background: #dc3545;
-    color: white;
-    border: none;
-    border-radius: 12px;
-    padding: 10px;
-    font-size: 14px;
-    font-weight: 500;
+.clear-data-link a {
+    color: #666666;
+    text-decoration: none;
+    font-size: 12px;
     cursor: pointer;
-    margin-top: 10px;
-    transition: background-color 0.2s ease;
 }
 
-.clear-data-button:hover {
-    background: #c82333;
+.clear-data-link a:hover {
+    text-decoration: underline;
 }

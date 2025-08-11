@@ -10,42 +10,48 @@
     <link rel="manifest" href="manifest.json">
     
     <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#667eea">
+    <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Workout Randomiser">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' fill='%23667eea' rx='20'/><text x='90' y='130' text-anchor='middle' font-size='100' fill='white'>💪</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' fill='%23000000' rx='20'/><rect x='18' y='18' width='144' height='144' fill='white' rx='16'/><rect x='36' y='36' width='108' height='108' fill='%23000000' rx='12'/><rect x='54' y='54' width='72' height='72' fill='white' rx='8'/></svg>">
     
     <!-- Microsoft Tiles -->
-    <meta name="msapplication-TileColor" content="#667eea">
-    <meta name="msapplication-TileImage" content="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 144 144'><rect width='144' height='144' fill='%23667eea'/><text x='72' y='100' text-anchor='middle' font-size='80' fill='white'>💪</text></svg>">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="msapplication-TileImage" content="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 144 144'><rect width='144' height='144' fill='%23000000'/><rect x='12' y='12' width='120' height='120' fill='white'/><rect x='24' y='24' width='96' height='96' fill='%23000000'/><rect x='36' y='36' width='72' height='72' fill='white'/></svg>">
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>💪 Workout Randomiser</h1>
+            <h1>Workout Randomiser</h1>
         </div>
         
         <div class="content">
             <div id="resetNotice" class="reset-notice">
-                🎉 Trening ukończony! Lista została zresetowana.
+                Trening ukończony! Lista została zresetowana.
             </div>
             
-            <div id="stats" class="stats">
-                <!-- Statystyki będą dodane przez JavaScript -->
+            <div class="section-title">Ćwiczenia na dzisiaj</div>
+            
+            <div id="todayExercise" class="today-exercise">
+                <!-- Dzisiejsze ćwiczenie będzie dodane przez JavaScript -->
             </div>
             
-            <div id="muscleList">
-                <!-- Lista mięśni będzie dodana przez JavaScript -->
+            <button class="show-more-button" id="showMoreButton" onclick="toggleMoreExercises()">
+                Pokaż więcej
+            </button>
+            
+            <div id="moreExercises" class="more-exercises">
+                <!-- Pozostałe ćwiczenia będą dodane przez JavaScript -->
             </div>
             
             <button class="shuffle-button" onclick="randomizeOrder()">
-                🎲 Losuj kolejność
+                Losuj
             </button>
             
-            <button class="clear-data-button" onclick="clearAllData()">
-                🗑️ Wyczyść dane
-            </button>
+            <div class="clear-data-link">
+                <a onclick="clearAllData()">wyczyść dane</a>
+            </div>
         </div>
     </div>
 
