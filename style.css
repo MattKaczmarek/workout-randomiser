@@ -88,7 +88,9 @@ body {
     border-radius: 6px;
     padding: 12px;
     color: white;
-    font-size: 14px;
+    font-size: 16px; /* 16px+ zapobiega zoom na iOS */
+    -webkit-appearance: none;
+    -webkit-border-radius: 6px;
 }
 
 .input-group input::placeholder {
@@ -164,9 +166,10 @@ body {
     background: transparent;
     border: none;
     color: white;
-    font-size: 14px;
+    font-size: 16px; /* 16px+ zapobiega zoom na iOS */
     width: 100%;
     outline: none;
+    -webkit-appearance: none;
 }
 
 .muscle-tag input:focus {

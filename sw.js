@@ -1,4 +1,4 @@
-const CACHE_NAME = 'workout-randomiser-v3.1.1';
+const CACHE_NAME = 'workout-randomiser-v3.1.2';
 const urlsToCache = [
   './',
   './index.html',
@@ -10,15 +10,25 @@ const urlsToCache = [
 // Instalacja Service Worker - od razu przejmij kontrolę
 self.addEventListener('install', function(event) {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(function(cache) {
-        console.log('Cache opened:', CACHE_NAME);
-        return cache.addAll(urlsToCache);
-      })
-      .then(() => {
-        // Natychmiast aktywuj nowy Service Worker
-        return self.skipWaiting();
-      })
+    // Najpierw wyczyść wszystkie stare cache
+    caches.keys().then(function(cacheNames) {
+      return Promise.all(
+        cacheNames.map(function(cacheName) {
+          if (cacheName !== CACHE_NAME) {
+            console.log('Usuwam stary cache:', cacheName);
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    }).then(() => {
+      return caches.open(CACHE_NAME);
+    }).then(function(cache) {
+      console.log('Cache opened:', CACHE_NAME);
+      return cache.addAll(urlsToCache);
+    }).then(() => {
+      // Natychmiast aktywuj nowy Service Worker
+      return self.skipWaiting();
+    })
   );
 });
 

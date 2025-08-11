@@ -509,19 +509,22 @@ function showUpdateNotification() {
         top: 0;
         left: 0;
         right: 0;
-        background: #000000;
+        background: #ff4444;
         color: white;
-        padding: 15px;
+        padding: 20px;
         text-align: center;
         z-index: 1000;
         cursor: pointer;
         font-weight: bold;
+        font-size: 16px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
     `;
-    updateBanner.innerHTML = '🔄 Dostępna aktualizacja! Kliknij aby odświeżyć';
+    updateBanner.innerHTML = '🚀 WAŻNA AKTUALIZACJA! Kliknij aby zainstalować nową wersję';
     updateBanner.onclick = () => {
-        if (navigator.serviceWorker.controller) {
-            navigator.serviceWorker.controller.postMessage({action: 'skipWaiting'});
-        }
+        // Wyczyść localStorage dla pewności
+        localStorage.clear();
+        // Przeładuj stronę
+        window.location.reload(true);
     };
     document.body.insertBefore(updateBanner, document.body.firstChild);
 }
