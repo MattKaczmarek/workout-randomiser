@@ -75,25 +75,36 @@ function renderExercises() {
     moreExercises.innerHTML = '';
     
     if (muscleOrder.length > 0) {
-        // Pierwsze ćwiczenie - "na dzisiaj"
-        const firstMuscle = muscleOrder[0];
-        const isChecked = muscleStates[firstMuscle];
+        // Posortuj mięśnie: nieodhaczone na górze, odhaczone na dole
+        const sortedMuscles = [...muscleOrder].sort((a, b) => {
+            const aChecked = muscleStates[a] || false;
+            const bChecked = muscleStates[b] || false;
+            
+            // Nieodhaczone (false) na górze, odhaczone (true) na dole
+            if (aChecked === bChecked) return 0;
+            return aChecked ? 1 : -1;
+        });
         
-        const muscleItem = document.createElement('div');
-        muscleItem.className = `muscle-item ${isChecked ? 'checked' : ''}`;
-        muscleItem.onclick = () => toggleMuscle(firstMuscle);
+        // Pierwsze nieodhaczone ćwiczenie - "na dzisiaj"
+        const firstUncheckedMuscle = sortedMuscles.find(muscle => !muscleStates[muscle]);
         
-        muscleItem.innerHTML = `
-            <div class="checkbox">${isChecked ? '✓' : ''}</div>
-            <div class="muscle-text">${firstMuscle}</div>
-        `;
-        
-        todayExercise.appendChild(muscleItem);
+        if (firstUncheckedMuscle) {
+            const muscleItem = document.createElement('div');
+            muscleItem.className = 'muscle-item';
+            muscleItem.onclick = () => toggleMuscle(firstUncheckedMuscle);
+            
+            muscleItem.innerHTML = `
+                <div class="checkbox"></div>
+                <div class="muscle-text">${firstUncheckedMuscle}</div>
+            `;
+            
+            todayExercise.appendChild(muscleItem);
+        }
         
         // Pozostałe ćwiczenia
-        if (muscleOrder.length > 1) {
-            const remainingMuscles = muscleOrder.slice(1);
-            
+        const remainingMuscles = sortedMuscles.filter(muscle => muscle !== firstUncheckedMuscle);
+        
+        if (remainingMuscles.length > 0) {
             remainingMuscles.forEach((muscle) => {
                 const isChecked = muscleStates[muscle];
                 const muscleItem = document.createElement('div');
@@ -135,36 +146,20 @@ function toggleMoreExercises() {
 function toggleMuscle(muscle) {
     muscleStates[muscle] = !muscleStates[muscle];
     
-    // Sprawdź czy wszystkie są odznaczone
-    const allChecked = Object.values(muscleStates).every(checked => checked);
-    
-    if (allChecked) {
-        // Pokaż komunikat
-        const notice = document.getElementById('resetNotice');
-        notice.classList.add('show');
-        
-        // Reset po 2 sekundach
-        setTimeout(() => {
-            MUSCLES.forEach(m => {
-                muscleStates[m] = false;
-            });
-            notice.classList.remove('show');
-            showMore = false;
-            renderExercises();
-        }, 2000);
-    }
-    
+    // Po prostu przerenderwij - bez auto-restartu
     renderExercises();
 }
 
 function randomizeOrder() {
-    muscleOrder = shuffleArray(MUSCLES);
-    // Reset checkboxów
-    MUSCLES.forEach(muscle => {
-        muscleStates[muscle] = false;
-    });
-    showMore = false;
-    renderExercises();
+    if (confirm('Czy na pewno chcesz wylosować nową listę? Obecny postęp zostanie zresetowany.')) {
+        muscleOrder = shuffleArray(MUSCLES);
+        // Reset checkboxów
+        MUSCLES.forEach(muscle => {
+            muscleStates[muscle] = false;
+        });
+        showMore = false;
+        renderExercises();
+    }
 }
 
 // Rejestracja Service Worker z obsługą aktualizacji
