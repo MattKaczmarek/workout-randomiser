@@ -309,11 +309,6 @@ body {
     color: white;
 }
 
-.muscle-pair {
-    font-size: 14px;
-    color: #cccccc;
-    margin-top: 2px;
-}
 
 .show-more-button {
     width: 100%;
@@ -349,7 +344,7 @@ body {
 }
 
 .shuffle-button {
-    flex: 1;
+    width: 100%;
     background: #333333;
     color: white;
     border: none;
@@ -365,22 +360,6 @@ body {
     background: #444444;
 }
 
-.reset-button {
-    flex: 1;
-    background: #222222;
-    color: white;
-    border: 1px solid #444444;
-    border-radius: 8px;
-    padding: 15px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.reset-button:hover {
-    background: #333333;
-}
 
 .clear-data-link {
     text-align: center;

@@ -3,6 +3,7 @@ let mainMuscles = [];
 let additionalMuscles = [];
 let workoutExercises = [];
 let exerciseStates = {};
+let originalOrder = [];
 let showMore = false;
 
 // Funkcje localStorage
@@ -11,7 +12,8 @@ function saveData() {
         mainMuscles: mainMuscles,
         additionalMuscles: additionalMuscles,
         workoutExercises: workoutExercises,
-        exerciseStates: exerciseStates
+        exerciseStates: exerciseStates,
+        originalOrder: originalOrder
     };
     localStorage.setItem('workoutRandomiser', JSON.stringify(data));
 }
@@ -24,6 +26,7 @@ function loadData() {
         additionalMuscles = data.additionalMuscles || [];
         workoutExercises = data.workoutExercises || [];
         exerciseStates = data.exerciseStates || {};
+        originalOrder = data.originalOrder || [];
     }
 }
 
@@ -47,6 +50,7 @@ function clearAllData() {
         additionalMuscles = [];
         workoutExercises = [];
         exerciseStates = {};
+        originalOrder = [];
         
         // Przeładuj aplikację żeby mieć pewność że wszystko się zresetowało
         alert('Wszystkie dane zostały wyczyszczone. Aplikacja zostanie przeładowana.');
@@ -288,15 +292,24 @@ function generateWorkout() {
     const shuffledAdditional = shuffleArray(additionalMuscles);
     const exercises = [];
     
+    // Wygeneruj losowe pozycje dla mięśni dodatkowych
+    let randomPositions = [];
+    if (shuffledAdditional.length > 0) {
+        // Wylosuj pozycje od 0 do długość głównych mięśni
+        const availablePositions = Array.from({length: shuffledMain.length}, (_, i) => i);
+        randomPositions = shuffleArray(availablePositions).slice(0, shuffledAdditional.length);
+    }
+    
     // Dla każdego mięśnia głównego
     shuffledMain.forEach((mainMuscle, index) => {
         let exerciseName = mainMuscle;
         let exerciseId = `main_${index}`;
         let additionalMuscle = null;
         
-        // Jeśli są dostępne mięśnie dodatkowe i ten index mieści się w zakresie
-        if (shuffledAdditional.length > 0 && index < shuffledAdditional.length) {
-            additionalMuscle = shuffledAdditional[index];
+        // Sprawdź czy ta pozycja ma dostać mięsień dodatkowy
+        const additionalIndex = randomPositions.indexOf(index);
+        if (additionalIndex !== -1 && shuffledAdditional[additionalIndex]) {
+            additionalMuscle = shuffledAdditional[additionalIndex];
             exerciseName = `${mainMuscle} + ${additionalMuscle}`;
             exerciseId = `combo_${index}`;
         }
@@ -318,6 +331,7 @@ function startWorkout() {
     // Jeśli nie ma wygenerowanego treningu, wygeneruj go
     if (workoutExercises.length === 0) {
         workoutExercises = generateWorkout();
+        originalOrder = [...workoutExercises]; // Zachowaj oryginalną kolejność
         exerciseStates = {};
         
         // Zresetuj stany ćwiczeń
@@ -350,6 +364,27 @@ function showWorkoutScreen() {
 }
 
 // Funkcje treningu
+function getSortedExercises() {
+    if (originalOrder.length === 0) {
+        return workoutExercises;
+    }
+    
+    // Podziel ćwiczenia na niezaznaczone i zaznaczone, zachowując oryginalną kolejność
+    const uncheckedExercises = [];
+    const checkedExercises = [];
+    
+    originalOrder.forEach(exercise => {
+        if (exerciseStates[exercise.id]) {
+            checkedExercises.push(exercise);
+        } else {
+            uncheckedExercises.push(exercise);
+        }
+    });
+    
+    // Zwróć: najpierw niezaznaczone (w oryginalnej kolejności), potem zaznaczone na dole (w oryginalnej kolejności)
+    return [...uncheckedExercises, ...checkedExercises];
+}
+
 function renderWorkoutExercises() {
     const todayExercise = document.getElementById('todayExercise');
     const moreExercises = document.getElementById('moreExercises');
@@ -367,8 +402,11 @@ function renderWorkoutExercises() {
         return;
     }
     
-    // Ćwiczenie "na dzisiaj" to zawsze pierwsze z oryginalnej listy (nie sortujemy!)
-    const todayExerciseData = workoutExercises.length > 0 ? workoutExercises[0] : null;
+    // Pobierz posortowane ćwiczenia (niezaznaczone na dole)
+    const sortedExercises = getSortedExercises();
+    
+    // Ćwiczenie "na dzisiaj" to zawsze pierwsze z posortowanych ćwiczeń
+    const todayExerciseData = sortedExercises.length > 0 ? sortedExercises[0] : null;
     
     if (todayExerciseData) {
         const isChecked = exerciseStates[todayExerciseData.id] || false;
@@ -386,12 +424,12 @@ function renderWorkoutExercises() {
         todayExercise.appendChild(exerciseItem);
     }
     
-    // Pozostałe ćwiczenia (wszystkie poza pierwszym)
-    const remainingExercises = workoutExercises.slice(1);
+    // Pozostałe ćwiczenia (wszystkie poza pierwszym z posortowanych)
+    const remainingExercises = sortedExercises.slice(1);
     
     if (remainingExercises.length > 0) {
         remainingExercises.forEach((exercise) => {
-            const isChecked = exerciseStates[exercise.id];
+            const isChecked = exerciseStates[exercise.id] || false;
             const exerciseItem = document.createElement('div');
             exerciseItem.className = `muscle-item ${isChecked ? 'checked' : ''}`;
             exerciseItem.onclick = () => toggleExercise(exercise.id);
@@ -420,8 +458,6 @@ function renderWorkoutExercises() {
         showMoreButton.style.display = 'none';
         showLessButton.style.display = 'none';
     }
-    
-    saveData();
 }
 
 function toggleMoreExercises() {
@@ -432,11 +468,13 @@ function toggleMoreExercises() {
 function toggleExercise(exerciseId) {
     exerciseStates[exerciseId] = !exerciseStates[exerciseId];
     renderWorkoutExercises();
+    saveData();
 }
 
 function randomizeOrder() {
     if (confirm('Czy na pewno chcesz wylosować nową listę? Obecny postęp zostanie zresetowany.')) {
         workoutExercises = generateWorkout();
+        originalOrder = [...workoutExercises]; // Nowa oryginalna kolejność
         exerciseStates = {};
         
         // Zresetuj stany ćwiczeń
@@ -446,22 +484,10 @@ function randomizeOrder() {
         
         showMore = false;
         renderWorkoutExercises();
+        saveData();
     }
 }
 
-function resetWorkout() {
-    if (confirm('Czy na pewno chcesz zresetować postęp treningu?')) {
-        exerciseStates = {};
-        
-        // Zresetuj stany ćwiczeń
-        workoutExercises.forEach(exercise => {
-            exerciseStates[exercise.id] = false;
-        });
-        
-        showMore = false;
-        renderWorkoutExercises();
-    }
-}
 
 // Obsługa klawiatury
 function handleKeyPress(event, inputType) {
@@ -558,6 +584,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Jeśli nie ma wygenerowanego treningu, wygeneruj go
     if (workoutExercises.length === 0 && mainMuscles.length > 0) {
         workoutExercises = generateWorkout();
+        originalOrder = [...workoutExercises];
         exerciseStates = {};
         workoutExercises.forEach(exercise => {
             exerciseStates[exercise.id] = false;
