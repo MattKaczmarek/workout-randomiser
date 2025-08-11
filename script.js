@@ -93,6 +93,9 @@ function removeMainMuscle(index) {
         // Usuń z aktualnego treningu bez resetowania postępu
         workoutExercises = workoutExercises.filter(exercise => exercise.mainMuscle !== removedMuscle);
         
+        // Usuń również z originalOrder
+        originalOrder = originalOrder.filter(exercise => exercise.mainMuscle !== removedMuscle);
+        
         renderMainMusclesList();
         updateStartButton();
         
@@ -113,6 +116,18 @@ function removeAdditionalMuscle(index) {
         
         // Usuń z aktualnego treningu - znajdź ćwiczenia które zawierają ten mięsień dodatkowy
         workoutExercises = workoutExercises.map(exercise => {
+            if (exercise.additionalMuscle === removedMuscle) {
+                return {
+                    ...exercise,
+                    name: exercise.mainMuscle, // Zostaw tylko główny mięsień
+                    additionalMuscle: null
+                };
+            }
+            return exercise;
+        });
+        
+        // Aktualizuj również originalOrder
+        originalOrder = originalOrder.map(exercise => {
             if (exercise.additionalMuscle === removedMuscle) {
                 return {
                     ...exercise,
