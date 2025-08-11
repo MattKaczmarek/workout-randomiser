@@ -395,6 +395,10 @@ function renderWorkoutExercises() {
     todayExercise.innerHTML = '';
     moreExercises.innerHTML = '';
     
+    // Wymuś reflow DOM żeby wyczyścić pozostałe style
+    todayExercise.offsetHeight;
+    moreExercises.offsetHeight;
+    
     if (workoutExercises.length === 0) {
         todayExercise.innerHTML = '<div class="empty-state">Brak ćwiczeń</div>';
         showMoreButton.style.display = 'none';
@@ -411,7 +415,17 @@ function renderWorkoutExercises() {
     if (todayExerciseData) {
         const isChecked = exerciseStates[todayExerciseData.id] || false;
         const exerciseItem = document.createElement('div');
-        exerciseItem.className = `muscle-item ${isChecked ? 'checked' : ''}`;
+        
+        // Wyczyść wszystkie klasy i ustaw podstawowe
+        exerciseItem.className = '';
+        exerciseItem.classList.add('muscle-item');
+        if (isChecked) {
+            exerciseItem.classList.add('checked');
+        }
+        
+        // Wymuś odświeżenie stylów
+        exerciseItem.style.cssText = '';
+        
         exerciseItem.onclick = () => toggleExercise(todayExerciseData.id);
         
         exerciseItem.innerHTML = `
@@ -431,7 +445,17 @@ function renderWorkoutExercises() {
         remainingExercises.forEach((exercise) => {
             const isChecked = exerciseStates[exercise.id] || false;
             const exerciseItem = document.createElement('div');
-            exerciseItem.className = `muscle-item ${isChecked ? 'checked' : ''}`;
+            
+            // Wyczyść wszystkie klasy i ustaw podstawowe
+            exerciseItem.className = '';
+            exerciseItem.classList.add('muscle-item');
+            if (isChecked) {
+                exerciseItem.classList.add('checked');
+            }
+            
+            // Wymuś odświeżenie stylów
+            exerciseItem.style.cssText = '';
+            
             exerciseItem.onclick = () => toggleExercise(exercise.id);
             
             exerciseItem.innerHTML = `
