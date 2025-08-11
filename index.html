@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout Randomiser</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Workout Randomiser">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' fill='%23667eea' rx='20'/><text x='90' y='130' text-anchor='middle' font-size='100' fill='white'>💪</text></svg>">
+    
+    <!-- Microsoft Tiles -->
+    <meta name="msapplication-TileColor" content="#667eea">
+    <meta name="msapplication-TileImage" content="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 144 144'><rect width='144' height='144' fill='%23667eea'/><text x='72' y='100' text-anchor='middle' font-size='80' fill='white'>💪</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💪 Workout Randomiser</h1>
+        </div>
+        
+        <div class="content">
+            <div id="resetNotice" class="reset-notice">
+                🎉 Trening ukończony! Lista została zresetowana.
+            </div>
+            
+            <div id="stats" class="stats">
+                <!-- Statystyki będą dodane przez JavaScript -->
+            </div>
+            
+            <div id="muscleList">
+                <!-- Lista mięśni będzie dodana przez JavaScript -->
+            </div>
+            
+            <button class="shuffle-button" onclick="randomizeOrder()">
+                🎲 Losuj kolejność
+            </button>
+            
+            <button class="clear-data-button" onclick="clearAllData()">
+                🗑️ Wyczyść dane
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
