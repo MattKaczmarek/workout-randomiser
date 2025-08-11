@@ -26,31 +26,84 @@
             <h1>Workout Randomiser</h1>
         </div>
         
-        <div class="content">
-            <div class="section-title">Ćwiczenia na dzisiaj</div>
-            
-            <div id="todayExercise" class="today-exercise">
-                <!-- Dzisiejsze ćwiczenie będzie dodane przez JavaScript -->
+        <!-- Ekran setupu treningu -->
+        <div id="setupScreen" class="screen setup-screen">
+            <div class="content">
+                <div class="section-title">Zbuduj swój trening</div>
+                
+                <div class="setup-section">
+                    <h3>Mięśnie główne</h3>
+                    <p class="section-desc">Dodaj mięśnie które będą podstawą Twojego treningu</p>
+                    
+                    <div class="input-group">
+                        <input type="text" id="mainMuscleInput" placeholder="Nazwa mięśnia głównego" maxlength="20">
+                        <button id="addMainMuscleBtn" onclick="addMainMuscle()">Dodaj</button>
+                    </div>
+                    
+                    <div id="mainMusclesList" class="muscles-list">
+                        <!-- Lista mięśni głównych -->
+                    </div>
+                </div>
+                
+                <div class="setup-section">
+                    <h3>Mięśnie dodatkowe <span class="optional">(opcjonalne)</span></h3>
+                    <p class="section-desc">Te mięśnie będą losowo parowane z głównymi</p>
+                    
+                    <div class="input-group">
+                        <input type="text" id="additionalMuscleInput" placeholder="Nazwa mięśnia dodatkowego" maxlength="20">
+                        <button id="addAdditionalMuscleBtn" onclick="addAdditionalMuscle()">Dodaj</button>
+                    </div>
+                    
+                    <div id="additionalMusclesList" class="muscles-list">
+                        <!-- Lista mięśni dodatkowych -->
+                    </div>
+                </div>
+                
+                <div class="setup-actions">
+                    <button id="startWorkoutBtn" class="primary-button" onclick="startWorkout()">
+                        Rozpocznij trening
+                    </button>
+                </div>
             </div>
-            
-            <button class="show-more-button" id="showMoreButton" onclick="toggleMoreExercises()">
-                Pokaż więcej
-            </button>
-            
-            <div id="moreExercises" class="more-exercises">
-                <!-- Pozostałe ćwiczenia będą dodane przez JavaScript -->
-            </div>
-            
-            <button class="show-more-button" id="showLessButton" onclick="toggleMoreExercises()" style="display: none;">
-                Pokaż mniej
-            </button>
-            
-            <button class="shuffle-button" onclick="randomizeOrder()">
-                Losuj
-            </button>
-            
-            <div class="clear-data-link">
-                <a onclick="clearAllData()">wyczyść dane</a>
+        </div>
+        
+        <!-- Główny ekran treningu -->
+        <div id="workoutScreen" class="screen workout-screen" style="display: none;">
+            <div class="content">
+                <div class="workout-header">
+                    <div class="section-title">Ćwiczenia na dzisiaj</div>
+                    <button class="edit-button" onclick="showSetupScreen()">Edytuj mięśnie</button>
+                </div>
+                
+                <div id="todayExercise" class="today-exercise">
+                    <!-- Dzisiejsze ćwiczenie -->
+                </div>
+                
+                <button class="show-more-button" id="showMoreButton" onclick="toggleMoreExercises()">
+                    Pokaż więcej
+                </button>
+                
+                <div id="moreExercises" class="more-exercises">
+                    <!-- Pozostałe ćwiczenia -->
+                </div>
+                
+                <button class="show-more-button" id="showLessButton" onclick="toggleMoreExercises()" style="display: none;">
+                    Pokaż mniej
+                </button>
+                
+                <div class="workout-actions">
+                    <button class="shuffle-button" onclick="randomizeOrder()">
+                        Losuj
+                    </button>
+                    
+                    <button class="reset-button" onclick="resetWorkout()">
+                        Reset treningu
+                    </button>
+                </div>
+                
+                <div class="clear-data-link">
+                    <a onclick="clearAllData()">wyczyść wszystkie dane</a>
+                </div>
             </div>
         </div>
     </div>

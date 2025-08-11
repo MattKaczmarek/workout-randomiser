@@ -39,12 +39,214 @@ body {
     background: #000000;
 }
 
-.section-title {
+.screen {
+    display: block;
+}
+
+/* Setup Screen Styles */
+.setup-screen .section-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.setup-section {
+    margin-bottom: 30px;
+}
+
+.setup-section h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 5px;
+}
+
+.optional {
+    font-weight: 400;
+    color: #888888;
+    font-size: 14px;
+}
+
+.section-desc {
+    font-size: 14px;
+    color: #cccccc;
+    margin-bottom: 15px;
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.input-group input {
+    flex: 1;
+    background: #111111;
+    border: 1px solid #333333;
+    border-radius: 6px;
+    padding: 12px;
+    color: white;
+    font-size: 14px;
+}
+
+.input-group input::placeholder {
+    color: #666666;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #555555;
+}
+
+.input-group button {
+    background: #333333;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.input-group button:hover {
+    background: #444444;
+}
+
+.muscles-list {
+    min-height: 50px;
+}
+
+.muscle-tag {
+    display: inline-block;
+    background: #222222;
+    color: white;
+    padding: 8px 12px;
+    margin: 4px;
+    border-radius: 6px;
+    font-size: 14px;
+    border: 1px solid #333333;
+    position: relative;
+    padding-right: 30px;
+}
+
+.muscle-tag .remove-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #888888;
+    font-size: 16px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.muscle-tag .remove-btn:hover {
+    color: #ffffff;
+}
+
+.muscle-tag.editing {
+    padding-right: 12px;
+}
+
+.muscle-tag input {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 14px;
+    width: 100%;
+    outline: none;
+}
+
+.muscle-tag input:focus {
+    background: #333333;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.setup-actions {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.primary-button {
+    width: 100%;
+    background: #333333;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 15px;
+    transition: background-color 0.2s ease;
+}
+
+.primary-button:hover {
+    background: #444444;
+}
+
+.primary-button:disabled {
+    background: #222222;
+    color: #666666;
+    cursor: not-allowed;
+}
+
+.example-button {
+    background: #111111;
+    color: #cccccc;
+    border: 1px solid #333333;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.example-button:hover {
+    background: #222222;
+}
+
+/* Workout Screen Styles */
+.workout-screen .section-title {
     font-size: 18px;
     font-weight: 600;
     color: white;
     margin-bottom: 15px;
-    text-align: center;
+}
+
+.workout-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.edit-button {
+    background: #222222;
+    color: #cccccc;
+    border: 1px solid #444444;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.edit-button:hover {
+    background: #333333;
 }
 
 .today-exercise {
@@ -104,22 +306,10 @@ body {
     color: white;
 }
 
-.shuffle-button {
-    width: 100%;
-    background: #333333;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 15px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-bottom: 15px;
-    transition: background-color 0.2s ease;
-}
-
-.shuffle-button:hover {
-    background: #444444;
+.muscle-pair {
+    font-size: 14px;
+    color: #cccccc;
+    margin-top: 2px;
 }
 
 .show-more-button {
@@ -149,21 +339,44 @@ body {
     display: block;
 }
 
-.reset-notice {
-    background: #222222;
-    color: white;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    text-align: center;
-    font-weight: 500;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    border: 1px solid #333333;
+.workout-actions {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
 }
 
-.reset-notice.show {
-    opacity: 1;
+.shuffle-button {
+    flex: 1;
+    background: #333333;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.shuffle-button:hover {
+    background: #444444;
+}
+
+.reset-button {
+    flex: 1;
+    background: #222222;
+    color: white;
+    border: 1px solid #444444;
+    border-radius: 8px;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.reset-button:hover {
+    background: #333333;
 }
 
 .clear-data-link {
@@ -181,4 +394,12 @@ body {
 .clear-data-link a:hover {
     text-decoration: underline;
     color: #aaaaaa;
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    color: #666666;
+    font-style: italic;
+    padding: 20px;
 }
