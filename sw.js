@@ -1,4 +1,4 @@
-const CACHE_NAME = 'workout-randomiser-v3.2.0';
+const CACHE_NAME = 'workout-randomiser-v3.3.3';
 const urlsToCache = [
   './',
   './index.html',

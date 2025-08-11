@@ -526,12 +526,24 @@ function handleKeyPress(event, inputType) {
 
 // Rejestracja Service Worker z obsługą aktualizacji
 if ('serviceWorker' in navigator) {
+    // Wymuś aktualizację przy każdym ładowaniu strony
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        registrations.forEach(function(registration) {
+            registration.update();
+        });
+    });
+    
     window.addEventListener('load', function() {
         navigator.serviceWorker.register('./sw.js')
             .then(function(registration) {
                 console.log('Service Worker zarejestrowany:', registration.scope);
                 
-                // Wymusza sprawdzenie aktualizacji przy każdym uruchomieniu
+                // Agresywne wymuszenie sprawdzenia aktualizacji
+                setInterval(() => {
+                    registration.update();
+                }, 5000); // Sprawdzaj co 5 sekund
+                
+                // Natychmiastowe sprawdzenie aktualizacji
                 registration.update();
                 
                 // Sprawdź czy jest nowa wersja
@@ -540,8 +552,10 @@ if ('serviceWorker' in navigator) {
                     newWorker.addEventListener('statechange', () => {
                         if (newWorker.state === 'installed') {
                             if (navigator.serviceWorker.controller) {
-                                // Nowa wersja dostępna
-                                showUpdateNotification();
+                                // Nowa wersja dostępna - automatycznie zaaktualizuj
+                                console.log('Nowa wersja dostępna, aktualizuję automatycznie...');
+                                newWorker.postMessage({action: 'skipWaiting'});
+                                window.location.reload();
                             }
                         }
                     });
@@ -554,6 +568,7 @@ if ('serviceWorker' in navigator) {
         // Nasłuchuj wiadomości od Service Worker
         navigator.serviceWorker.addEventListener('controllerchange', () => {
             // Service Worker został zaktualizowany
+            console.log('Service Worker zaktualizowany, przeładowuję stronę...');
             window.location.reload();
         });
     });
