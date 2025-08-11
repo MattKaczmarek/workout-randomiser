@@ -423,10 +423,17 @@ function renderWorkoutExercises() {
             exerciseItem.classList.add('checked');
         }
         
-        // Wymuś odświeżenie stylów
+        // Wymuś odświeżenie stylów - kompletne resetowanie
         exerciseItem.style.cssText = '';
+        exerciseItem.removeAttribute('style');
         
-        exerciseItem.onclick = () => toggleExercise(todayExerciseData.id);
+        exerciseItem.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            // Usuń focus i blur
+            e.target.blur();
+            toggleExercise(todayExerciseData.id);
+        };
         
         exerciseItem.innerHTML = `
             <div class="checkbox">${isChecked ? '✓' : ''}</div>
@@ -453,10 +460,17 @@ function renderWorkoutExercises() {
                 exerciseItem.classList.add('checked');
             }
             
-            // Wymuś odświeżenie stylów
+            // Wymuś odświeżenie stylów - kompletne resetowanie
             exerciseItem.style.cssText = '';
+            exerciseItem.removeAttribute('style');
             
-            exerciseItem.onclick = () => toggleExercise(exercise.id);
+            exerciseItem.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                // Usuń focus i blur
+                e.target.blur();
+                toggleExercise(exercise.id);
+            };
             
             exerciseItem.innerHTML = `
                 <div class="checkbox">${isChecked ? '✓' : ''}</div>
@@ -491,8 +505,19 @@ function toggleMoreExercises() {
 
 function toggleExercise(exerciseId) {
     exerciseStates[exerciseId] = !exerciseStates[exerciseId];
-    renderWorkoutExercises();
-    saveData();
+    
+    // Wymuś usunięcie wszystkich aktywnych stylów mobile
+    document.querySelectorAll('.muscle-item').forEach(item => {
+        item.blur();
+        item.style.background = '';
+        item.style.borderColor = '';
+    });
+    
+    // Mikro-opóźnienie dla pełnego odświeżenia
+    setTimeout(() => {
+        renderWorkoutExercises();
+        saveData();
+    }, 10);
 }
 
 function randomizeOrder() {
