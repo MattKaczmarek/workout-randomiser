@@ -28,13 +28,29 @@ function loadData() {
 }
 
 function clearAllData() {
-    if (confirm('Czy na pewno chcesz wyczyścić wszystkie zapisane dane?')) {
-        localStorage.removeItem('workoutRandomiser');
+    if (confirm('Czy na pewno chcesz wyczyścić WSZYSTKIE dane aplikacji? Ta operacja usunie również cache aplikacji i nie można jej cofnąć.')) {
+        // Agresywne czyszczenie wszystkiego
+        localStorage.clear(); // Wyczyść cały localStorage
+        sessionStorage.clear(); // Wyczyść sessionStorage
+        
+        // Wyczyść cache aplikacji
+        if ('caches' in window) {
+            caches.keys().then(function(names) {
+                for (let name of names) {
+                    caches.delete(name);
+                }
+            });
+        }
+        
+        // Zresetuj zmienne
         mainMuscles = [];
         additionalMuscles = [];
         workoutExercises = [];
         exerciseStates = {};
-        showSetupScreen();
+        
+        // Przeładuj aplikację żeby mieć pewność że wszystko się zresetowało
+        alert('Wszystkie dane zostały wyczyszczone. Aplikacja zostanie przeładowana.');
+        window.location.reload(true);
     }
 }
 
@@ -509,22 +525,22 @@ function showUpdateNotification() {
         top: 0;
         left: 0;
         right: 0;
-        background: #ff4444;
+        background: #28a745;
         color: white;
-        padding: 20px;
+        padding: 15px;
         text-align: center;
         z-index: 1000;
         cursor: pointer;
         font-weight: bold;
-        font-size: 16px;
+        font-size: 14px;
         box-shadow: 0 2px 10px rgba(0,0,0,0.3);
     `;
-    updateBanner.innerHTML = '🚀 WAŻNA AKTUALIZACJA! Kliknij aby zainstalować nową wersję';
+    updateBanner.innerHTML = '🔄 Dostępna aktualizacja! Kliknij aby zainstalować';
     updateBanner.onclick = () => {
-        // Wyczyść localStorage dla pewności
-        localStorage.clear();
-        // Przeładuj stronę
-        window.location.reload(true);
+        // NIE czyść localStorage - zachowaj dane użytkownika
+        if (navigator.serviceWorker.controller) {
+            navigator.serviceWorker.controller.postMessage({action: 'skipWaiting'});
+        }
     };
     document.body.insertBefore(updateBanner, document.body.firstChild);
 }
