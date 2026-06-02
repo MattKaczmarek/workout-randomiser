@@ -1,5 +1,5 @@
 (function exposeWorkoutConfig(global) {
-  const version = '3.4.0';
+  const version = '3.4.1';
   const cachePrefix = 'workout-randomiser-';
 
   global.WorkoutConfig = Object.freeze({
