@@ -1,23 +1,24 @@
 {
   "name": "Workout Randomiser",
   "short_name": "Workout",
-  "description": "Aplikacja do losowania kolejności ćwiczeń mięśni",
+  "description": "Lekka PWA do losowania kolejności ćwiczeń i blokowania złych połączeń mięśni.",
+  "id": "./index.html",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "background_color": "#101611",
+  "theme_color": "#101611",
   "orientation": "portrait",
   "scope": "./",
   "lang": "pl",
   "icons": [
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' fill='%23000000' rx='24'/><rect x='24' y='24' width='144' height='144' fill='white' rx='16'/><rect x='48' y='48' width='96' height='96' fill='%23000000' rx='12'/><rect x='72' y='72' width='48' height='48' fill='white' rx='6'/></svg>",
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' fill='%23101611' rx='44'/><path d='M42 124c29 25 79 25 108 0' fill='none' stroke='%23D7FF64' stroke-width='18' stroke-linecap='round'/><circle cx='68' cy='76' r='15' fill='%23F4F1E8'/><circle cx='124' cy='76' r='15' fill='%23F4F1E8'/></svg>",
       "sizes": "192x192",
       "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='%23000000' rx='64'/><rect x='64' y='64' width='384' height='384' fill='white' rx='48'/><rect x='128' y='128' width='256' height='256' fill='%23000000' rx='32'/><rect x='192' y='192' width='128' height='128' fill='white' rx='16'/></svg>",
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='%23101611' rx='112'/><path d='M108 332c78 66 218 66 296 0' fill='none' stroke='%23D7FF64' stroke-width='48' stroke-linecap='round'/><circle cx='184' cy='204' r='42' fill='%23F4F1E8'/><circle cx='328' cy='204' r='42' fill='%23F4F1E8'/></svg>",
       "sizes": "512x512",
       "type": "image/svg+xml",
       "purpose": "any maskable"
@@ -29,13 +30,7 @@
       "name": "Losuj trening",
       "short_name": "Losuj",
       "description": "Szybko wylosuj kolejność ćwiczeń",
-      "url": "./index.html?action=shuffle",
-      "icons": [
-        {
-          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><text y='72' font-size='72'>🎲</text></svg>",
-          "sizes": "96x96"
-        }
-      ]
+      "url": "./index.html?action=shuffle"
     }
   ]
 }

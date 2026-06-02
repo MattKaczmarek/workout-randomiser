@@ -1,41 +1,54 @@
-# 💪 Workout Randomiser
+# Workout Randomiser
 
-Prosta aplikacja PWA do losowania kolejności ćwiczeń mięśni podczas treningu.
+Lekka statyczna PWA do losowania kolejności ćwiczeń mięśni podczas treningu. Aplikacja działa bez backendu, zapisuje dane lokalnie w przeglądarce i może działać offline po instalacji.
 
-## 📱 Jak zainstalować na iPhone
+## Instalacja na iPhone
 
-1. Otwórz link: **https://mattkaczmarek.github.io/workout-randomiser/**
-2. W Safari kliknij **Udostępnij** → **Dodaj do ekranu głównego**
-3. Gotowe! Masz aplikację z ikoną 💪 na ekranie głównym
+1. Otwórz: **https://mattkaczmarek.github.io/workout-randomiser/**
+2. W Safari kliknij **Udostępnij** -> **Dodaj do ekranu głównego**.
+3. Uruchamiaj aplikację z ikony na ekranie głównym.
 
-## ✨ Funkcje
+## Funkcje
 
-- 🎲 **Losowanie kolejności** ćwiczeń mięśni
-- ✅ **Odznaczanie wykonanych** partii mięśniowych
-- 📊 **Statystyki** - liczba ukończonych treningów
-- 💾 **Zapisywanie lokalnie** - dane nie znikają
-- 🔄 **Automatyczne aktualizacje** - zawsze najnowsza wersja
-- 📱 **Działa offline** - nie potrzebujesz internetu
-- 🚀 **PWA** - instaluje się jak prawdziwa aplikacja
+- Losowanie kolejności mięśni głównych.
+- Losowe parowanie mięśni dodatkowych z głównymi.
+- Reguły wykluczające pary mięśni, które nie mogą wystąpić razem w jednym ćwiczeniu.
+- Odznaczanie wykonanych ćwiczeń i przesuwanie ich na dół listy.
+- Licznik postępu, ukończonych treningów i daty ostatniego ukończenia.
+- Lokalny zapis danych w `localStorage`.
+- PWA z service workerem i cache offline.
 
-## 🏋️ Jak używać
+## Jak używać
 
-1. **Losuj** - kliknij przycisk "Losuj kolejność"
-2. **Ćwicz** - wykonuj ćwiczenia w wylosowanej kolejności  
-3. **Odznaczaj** - kliknij na wykonane partie mięśniowe
-4. **Reset** - po wykonaniu wszystkich aplikacja się resetuje
+1. Dodaj mięśnie główne, np. `klatka`, `plecy`, `nogi`.
+2. Opcjonalnie dodaj mięśnie dodatkowe, np. `brzuch`, `biceps`.
+3. W sekcji **Nie łącz razem** dodaj pary, które nie mogą pojawić się jako jedno ćwiczenie.
+4. Kliknij **Rozpocznij trening**.
+5. Odznaczaj wykonane ćwiczenia albo kliknij **Losuj nową kolejność**.
 
-## 🔧 Aktualizacje
+## Struktura
 
-Aplikacja sprawdza aktualizacje automatycznie. Gdy pojawi się zielony pasek "Dostępna aktualizacja" - kliknij go aby zainstalować najnowsą wersję.
+- `index.html` - statyczny layout aplikacji.
+- `style.css` - cały wygląd UI, bez zewnętrznych bibliotek.
+- `scripts/config.js` - wspólna wersja, nazwy cache i lista assetów PWA.
+- `scripts/app.mjs` - obsługa UI, zdarzeń i service workera.
+- `scripts/workout.mjs` - czysta logika mięśni, losowania i reguł wykluczeń.
+- `scripts/storage.mjs` - zapis/odczyt danych lokalnych.
+- `scripts/dom.mjs` - małe helpery DOM.
+- `sw.js` - service worker.
 
-## 📊 Statystyki
+## Development
 
-Aplikacja śledzi:
-- Liczbę wykonanych ćwiczeń w bieżącym treningu
-- Łączną liczbę ukończonych treningów
-- Datę ostatniego treningu
+Aplikacja nie wymaga builda.
 
----
+```bash
+python3 -m http.server 8765
+```
 
-*Aplikacja działa w pełni offline i zapisuje wszystkie dane lokalnie na Twoim urządzeniu.*
+Testy logiki:
+
+```bash
+node --test tests/*.test.mjs
+```
+
+Przed deployem podbij wersję w `scripts/config.js`. Service worker używa tej wersji do nazwy cache.

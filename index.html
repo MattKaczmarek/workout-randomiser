@@ -5,106 +5,109 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Workout Randomiser</title>
     <link rel="stylesheet" href="style.css">
-    
-    <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
-    
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#000000">
+    <meta name="theme-color" content="#101611">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Workout Randomiser">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' fill='%23000000' rx='20'/><rect x='18' y='18' width='144' height='144' fill='white' rx='16'/><rect x='36' y='36' width='108' height='108' fill='%23000000' rx='12'/><rect x='54' y='54' width='72' height='72' fill='white' rx='8'/></svg>">
-    
-    <!-- Microsoft Tiles -->
-    <meta name="msapplication-TileColor" content="#000000">
-    <meta name="msapplication-TileImage" content="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 144 144'><rect width='144' height='144' fill='%23000000'/><rect x='12' y='12' width='120' height='120' fill='white'/><rect x='24' y='24' width='96' height='96' fill='%23000000'/><rect x='36' y='36' width='72' height='72' fill='white'/></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' fill='%23101611' rx='40'/><path d='M42 116c24 22 72 22 96 0' fill='none' stroke='%23D7FF64' stroke-width='16' stroke-linecap='round'/><circle cx='62' cy='72' r='14' fill='%23F4F1E8'/><circle cx='118' cy='72' r='14' fill='%23F4F1E8'/></svg>">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Workout Randomiser</h1>
-        </div>
-        
-        <!-- Ekran setupu treningu -->
-        <div id="setupScreen" class="screen setup-screen">
-            <div class="content">
-                <div class="section-title">Zbuduj swój trening</div>
-                
+    <main class="app-shell">
+        <section class="hero-card" aria-label="Workout Randomiser">
+            <div>
+                <p class="eyebrow">PWA treningowa</p>
+                <h1>Workout Randomiser</h1>
+            </div>
+            <div class="version-pill" id="versionDisplay">v3.4.0</div>
+        </section>
+
+        <section id="setupScreen" class="screen setup-screen">
+            <div class="panel">
+                <div class="section-heading">
+                    <p class="eyebrow">Konfiguracja</p>
+                    <h2>Zbuduj trening</h2>
+                    <p>Dodaj mięśnie główne, opcjonalne dodatki i reguły, które blokują złe połączenia.</p>
+                </div>
+
                 <div class="setup-section">
                     <h3>Mięśnie główne</h3>
-                    <p class="section-desc">Dodaj mięśnie które będą podstawą Twojego treningu</p>
-                    
+                    <p class="section-desc">Podstawa treningu. Każdy główny mięsień trafia do planu.</p>
                     <div class="input-group">
-                        <input type="text" id="mainMuscleInput" placeholder="Nazwa mięśnia głównego" maxlength="20">
-                        <button id="addMainMuscleBtn" onclick="addMainMuscle()">Dodaj</button>
+                        <input type="text" id="mainMuscleInput" placeholder="np. klatka" maxlength="24" autocomplete="off">
+                        <button id="addMainMuscleBtn" type="button">Dodaj</button>
                     </div>
-                    
-                    <div id="mainMusclesList" class="muscles-list">
-                        <!-- Lista mięśni głównych -->
-                    </div>
+                    <div id="mainMusclesList" class="muscles-list" aria-live="polite"></div>
                 </div>
-                
-                <div class="setup-section">
-                    <h3>Mięśnie dodatkowe <span class="optional">(opcjonalne)</span></h3>
-                    <p class="section-desc">Te mięśnie będą losowo parowane z głównymi</p>
-                    
-                    <div class="input-group">
-                        <input type="text" id="additionalMuscleInput" placeholder="Nazwa mięśnia dodatkowego" maxlength="20">
-                        <button id="addAdditionalMuscleBtn" onclick="addAdditionalMuscle()">Dodaj</button>
-                    </div>
-                    
-                    <div id="additionalMusclesList" class="muscles-list">
-                        <!-- Lista mięśni dodatkowych -->
-                    </div>
-                </div>
-                
-                <div class="setup-actions">
-                    <button id="startWorkoutBtn" class="primary-button" onclick="startWorkout()">
-                        Rozpocznij trening
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Główny ekran treningu -->
-        <div id="workoutScreen" class="screen workout-screen" style="display: none;">
-            <div class="content">
-                <div class="workout-header">
-                    <div class="section-title">Ćwiczenia na dzisiaj</div>
-                    <button class="edit-button" onclick="showSetupScreen()">Edytuj mięśnie</button>
-                </div>
-                
-                <div id="todayExercise" class="today-exercise">
-                    <!-- Dzisiejsze ćwiczenie -->
-                </div>
-                
-                <button class="show-more-button" id="showMoreButton" onclick="toggleMoreExercises()">
-                    Pokaż więcej
-                </button>
-                
-                <div id="moreExercises" class="more-exercises">
-                    <!-- Pozostałe ćwiczenia -->
-                </div>
-                
-                <button class="show-more-button" id="showLessButton" onclick="toggleMoreExercises()" style="display: none;">
-                    Pokaż mniej
-                </button>
-                
-                <div class="workout-actions">
-                    <button class="shuffle-button" onclick="randomizeOrder()">
-                        Losuj
-                    </button>
-                </div>
-                
-                <div class="clear-data-link">
-                    <a onclick="clearAllData()">wyczyść wszystkie dane</a>
-                    <span class="version-display" id="versionDisplay">v3.3.8</span>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <script src="script.js"></script>
+                <div class="setup-section">
+                    <h3>Mięśnie dodatkowe <span class="optional">opcjonalne</span></h3>
+                    <p class="section-desc">Losowo parują się z głównymi, o ile nie blokuje ich reguła.</p>
+                    <div class="input-group">
+                        <input type="text" id="additionalMuscleInput" placeholder="np. brzuch" maxlength="24" autocomplete="off">
+                        <button id="addAdditionalMuscleBtn" type="button">Dodaj</button>
+                    </div>
+                    <div id="additionalMusclesList" class="muscles-list" aria-live="polite"></div>
+                </div>
+
+                <div class="setup-section rule-section">
+                    <h3>Nie łącz razem</h3>
+                    <p class="section-desc">Te pary nie pojawią się w jednym ćwiczeniu, np. główny + dodatkowy.</p>
+                    <div class="pair-builder">
+                        <select id="incompatibilityFirst" aria-label="Pierwszy mięsień"></select>
+                        <span aria-hidden="true">×</span>
+                        <select id="incompatibilitySecond" aria-label="Drugi mięsień"></select>
+                        <button id="addIncompatibilityBtn" type="button">Dodaj regułę</button>
+                    </div>
+                    <div id="incompatibilitiesList" class="rules-list" aria-live="polite"></div>
+                </div>
+
+                <button id="startWorkoutBtn" class="primary-button" type="button">Rozpocznij trening</button>
+            </div>
+        </section>
+
+        <section id="workoutScreen" class="screen workout-screen" hidden>
+            <div class="panel">
+                <div class="workout-header">
+                    <div>
+                        <p class="eyebrow">Dzisiaj</p>
+                        <h2>Ćwiczenia</h2>
+                    </div>
+                    <button id="editMusclesButton" class="ghost-button" type="button">Edytuj</button>
+                </div>
+
+                <div class="stats-grid" aria-label="Statystyki treningu">
+                    <div>
+                        <span id="progressCount">0</span>/<span id="totalCount">0</span>
+                        <small>postęp</small>
+                    </div>
+                    <div>
+                        <span id="completedWorkouts">0</span>
+                        <small>ukończone</small>
+                    </div>
+                    <div>
+                        <span id="lastCompletedAt">brak</span>
+                        <small>ostatnio</small>
+                    </div>
+                </div>
+
+                <div id="todayExercise" class="today-exercise"></div>
+                <button id="showMoreButton" class="show-more-button" type="button">Pokaż więcej</button>
+                <div id="moreExercises" class="more-exercises"></div>
+                <button id="showLessButton" class="show-more-button" type="button" hidden>Pokaż mniej</button>
+
+                <div class="workout-actions">
+                    <button id="shuffleButton" class="shuffle-button" type="button">Losuj nową kolejność</button>
+                </div>
+
+                <div class="clear-data-link">
+                    <button id="clearDataButton" type="button">wyczyść dane aplikacji</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="./scripts/config.js"></script>
+    <script type="module" src="./scripts/app.mjs"></script>
 </body>
 </html>

@@ -1,98 +1,67 @@
-const CACHE_NAME = 'workout-randomiser-v3.3.8';
-const urlsToCache = [
-  './',
-  './index.html',
-  './style.css',
-  './script.js',
-  './manifest.json'
-];
+importScripts('./scripts/config.js');
 
-// Instalacja Service Worker - od razu przejmij kontrolę
-self.addEventListener('install', function(event) {
+const { CACHE_NAME, CACHE_PREFIX, ASSETS } = self.WorkoutConfig;
+
+self.addEventListener('install', event => {
   event.waitUntil(
-    // Najpierw wyczyść wszystkie stare cache
-    caches.keys().then(function(cacheNames) {
-      return Promise.all(
-        cacheNames.map(function(cacheName) {
-          if (cacheName !== CACHE_NAME) {
-            console.log('Usuwam stary cache:', cacheName);
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    }).then(() => {
-      return caches.open(CACHE_NAME);
-    }).then(function(cache) {
-      console.log('Cache opened:', CACHE_NAME);
-      return cache.addAll(urlsToCache);
-    }).then(() => {
-      // Natychmiast aktywuj nowy Service Worker
-      return self.skipWaiting();
-    })
+    caches.keys()
+      .then(cacheNames => Promise.all(
+        cacheNames
+          .filter(cacheName => cacheName.startsWith(CACHE_PREFIX) && cacheName !== CACHE_NAME)
+          .map(cacheName => caches.delete(cacheName))
+      ))
+      .then(() => caches.open(CACHE_NAME))
+      .then(cache => cache.addAll(ASSETS))
+      .then(() => self.skipWaiting())
   );
 });
 
-// Obsługa żądań
-self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    caches.match(event.request)
-      .then(function(response) {
-        // Jeśli zasób jest w cache, zwróć go
-        if (response) {
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys()
+      .then(cacheNames => Promise.all(
+        cacheNames
+          .filter(cacheName => cacheName.startsWith(CACHE_PREFIX) && cacheName !== CACHE_NAME)
+          .map(cacheName => caches.delete(cacheName))
+      ))
+      .then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener('fetch', event => {
+  const { request } = event;
+  if (request.method !== 'GET') return;
+
+  const requestUrl = new URL(request.url);
+  if (requestUrl.origin !== self.location.origin) return;
+
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request)
+        .then(response => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put('./index.html', copy));
           return response;
-        }
-        
-        // W przeciwnym razie pobierz z sieci
-        return fetch(event.request).then(
-          function(response) {
-            // Sprawdź czy odpowiedź jest prawidłowa
-            if(!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
-            }
-
-            // Sklonuj odpowiedź
-            var responseToCache = response.clone();
-
-            caches.open(CACHE_NAME)
-              .then(function(cache) {
-                cache.put(event.request, responseToCache);
-              });
-
-            return response;
-          }
-        );
-      })
-      .catch(function() {
-        // Jeśli nie ma połączenia i brak w cache, pokaż główną stronę
-        return caches.match('./index.html');
-      })
-    );
-});
-
-// Aktualizacja cache - usuń stare wersje i przejmij kontrolę
-self.addEventListener('activate', function(event) {
-  const cacheWhitelist = [CACHE_NAME];
-  
-  event.waitUntil(
-    caches.keys().then(function(cacheNames) {
-      return Promise.all(
-        cacheNames.map(function(cacheName) {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
-            console.log('Usuwam stary cache:', cacheName);
-            return caches.delete(cacheName);
-          }
         })
-      );
-    }).then(() => {
-      // Przejmij kontrolę nad wszystkimi klientami
-      return self.clients.claim();
-    })
+        .catch(() => caches.match('./index.html'))
+    );
+    return;
+  }
+
+  event.respondWith(
+    caches.match(request)
+      .then(cached => cached || fetch(request).then(response => {
+        if (!response || response.status !== 200 || response.type !== 'basic') return response;
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
+        return response;
+      }))
+      .catch(() => caches.match('./index.html'))
   );
 });
 
-// Powiadomienie o dostępnej aktualizacji
-self.addEventListener('message', function(event) {
-  if (event.data.action === 'skipWaiting') {
+self.addEventListener('message', event => {
+  if (event.data?.action === 'skipWaiting') {
     self.skipWaiting();
   }
 });
